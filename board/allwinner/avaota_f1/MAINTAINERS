@@ -1,0 +1,6 @@
+AVAOTASBC AVAOTA F1 BOARD
+M:	ChainsX <chainsx@outlook.com>
+S:	Maintained
+F:	board/allwinner/avaota_f1/
+F:	configs/avaota_f1_defconfig
+F:	arch/riscv/dts/sun300i-v821*

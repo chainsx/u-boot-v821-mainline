@@ -111,6 +111,11 @@ int timer_timebase_fallback(struct udevice *dev)
 	uc_priv->clock_rate = cpu_plat->timebase_freq;
 	return 0;
 }
+#else
+int timer_timebase_fallback(struct udevice *dev)
+{
+	return 0;
+}
 #endif
 
 u64 timer_conv_64(u32 count)

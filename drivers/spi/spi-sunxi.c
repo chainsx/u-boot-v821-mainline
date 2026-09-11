@@ -81,8 +81,7 @@
 #define SUN4I_SPI_DEFAULT_RATE		1000000
 #define SUN4I_SPI_TIMEOUT_MS		1000
 
-#define SPI_REG(priv, reg)		((priv)->base + \
-					(priv)->variant->regs[reg])
+#define SPI_REG(priv, reg)		sun4i_spi_reg((priv), (reg))
 #define SPI_BIT(priv, bit)		((priv)->variant->bits[bit])
 #define SPI_CS(priv, cs)		(((cs) << SPI_BIT(priv, SPI_TCR_CS_SEL)) & \
 					SPI_BIT(priv, SPI_TCR_CS_MASK))
@@ -145,6 +144,12 @@ struct sun4i_spi_priv {
 	const u8 *tx_buf;
 	u8 *rx_buf;
 };
+
+static inline void __iomem *
+sun4i_spi_reg(struct sun4i_spi_priv *priv, enum sun4i_spi_regs reg)
+{
+	return (void __iomem *)(priv->base + priv->variant->regs[reg]);
+}
 
 static inline void sun4i_spi_drain_fifo(struct sun4i_spi_priv *priv, int len)
 {

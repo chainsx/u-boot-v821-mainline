@@ -724,7 +724,7 @@ __weak void harts_early_init(void)
 }
 
 #if !CONFIG_IS_ENABLED(SYSRESET)
-void reset_cpu(void)
+__weak void reset_cpu(void)
 {
 	printf("resetting ...\n");
 

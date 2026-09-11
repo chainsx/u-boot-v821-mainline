@@ -79,6 +79,10 @@ SECTIONS
 	_end = .;
 
 	.bss : {
+#ifdef CONFIG_OF_SEPARATE
+		/* Reserve space for the DTB appended to the raw image. */
+		. += CONFIG_SYS_FDT_PAD;
+#endif
 		__bss_start = .;
 		*(.bss*)
 		. = ALIGN(8);

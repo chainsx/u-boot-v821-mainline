@@ -37,14 +37,15 @@ SECTIONS
 		KEEP(*(SORT(__u_boot_list*)));
 	} > .spl_mem
 
-	. = ALIGN(4);
-
-	.binman_sym_table : {
+	.binman_sym_table ALIGN(8) : {
+		/* Keep the alignment padding in the raw binary. */
+		QUAD(0);
 		__binman_sym_start = .;
 		KEEP(*(SORT(.binman_sym*)));
 		__binman_sym_end = .;
-		. = ALIGN(8);
 	} > .spl_mem
+
+	. = ALIGN(8);
 
 	_end = .;
 	_image_binary_end = .;

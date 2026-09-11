@@ -389,6 +389,11 @@ config XTENSA
 
 endchoice
 
+config SOC_SUNXI
+	bool
+	help
+	  Selected for Allwinner sunxi SoCs on any CPU architecture.
+
 config SYS_ARCH
 	string
 	help

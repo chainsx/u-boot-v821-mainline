@@ -76,6 +76,7 @@ obj-$(CONFIG_SANDBOX_SPI) += sandbox_spi.o
 obj-$(CONFIG_SPI_SIFIVE) += spi-sifive.o
 obj-$(CONFIG_SPI_SN_F_OSPI) += spi-sn-f-ospi.o
 obj-$(CONFIG_SPI_SUNXI) += spi-sunxi.o
+obj-$(CONFIG_SPI_SUNXI_SPIF) += sunxi_spif.o
 obj-$(CONFIG_SH_QSPI) += sh_qspi.o
 obj-$(CONFIG_STM32_OSPI) += stm32_ospi.o
 obj-$(CONFIG_STM32_QSPI) += stm32_qspi.o

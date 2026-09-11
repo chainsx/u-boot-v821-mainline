@@ -1,0 +1,162 @@
+// SPDX-License-Identifier: GPL-2.0+
+
+#include <config.h>
+
+/ {
+	binman: binman {
+		multiple-images;
+	};
+};
+
+&{/cpus} {
+	compatible = "simple-bus";
+	bootph-some-ram;
+};
+
+&cpu0 {
+	bootph-some-ram;
+};
+
+&dcxo {
+	bootph-pre-ram;
+};
+
+&losc {
+	bootph-pre-ram;
+};
+
+&pio_apb {
+	bootph-pre-ram;
+};
+
+&cpu0_intc {
+	bootph-pre-ram;
+};
+
+&plic {
+	bootph-pre-ram;
+};
+
+&ccu {
+	bootph-pre-ram;
+};
+
+&pio {
+	bootph-pre-ram;
+};
+
+&r_pio {
+	bootph-pre-ram;
+};
+
+&uart0_pins {
+	bootph-pre-ram;
+};
+
+&mmc0_pins {
+	bootph-pre-ram;
+};
+
+&spif_bus_pins {
+	bootph-pre-ram;
+};
+
+&spif_control_pins {
+	bootph-pre-ram;
+};
+
+&plmt0 {
+	bootph-pre-ram;
+};
+
+&uart0 {
+	bootph-pre-ram;
+};
+
+&mmc0 {
+	bootph-pre-ram;
+};
+
+&spif {
+	bootph-pre-ram;
+};
+
+&binman {
+#ifdef CONFIG_SPL_LOAD_FIT
+	u-boot-sunxi-with-spl {
+		filename = "u-boot-sunxi-with-spl.bin";
+		pad-byte = <0xff>;
+
+		blob {
+			filename = "spl/sunxi-spl.bin";
+			min-size = <CONFIG_SPL_PAD_TO>;
+		};
+
+		fit {
+			description = "Configuration to load OpenSBI before U-Boot";
+			#address-cells = <2>;
+			fit,fdt-list = "of-list";
+
+			images {
+				uboot {
+					description = "U-Boot";
+					type = "standalone";
+					os = "U-Boot";
+					arch = "riscv";
+					compression = "none";
+					load = /bits/ 64 <CONFIG_TEXT_BASE>;
+					entry = /bits/ 64 <CONFIG_SYS_UBOOT_START>;
+
+					u-boot-nodtb {
+					};
+				};
+
+				opensbi {
+					description = "OpenSBI fw_dynamic firmware";
+					type = "firmware";
+					os = "opensbi";
+					arch = "riscv";
+					compression = "none";
+					load = /bits/ 64 <CONFIG_SPL_OPENSBI_LOAD_ADDR>;
+					entry = /bits/ 64 <CONFIG_SPL_OPENSBI_LOAD_ADDR>;
+
+					opensbi {
+						missing-msg = "opensbi";
+					};
+				};
+
+				@fdt-SEQ {
+					description = "NAME";
+					type = "flat_dt";
+					compression = "none";
+				};
+			};
+
+			configurations {
+				default = "conf-1";
+
+				@conf-SEQ {
+					description = "NAME";
+					firmware = "opensbi";
+					loadables = "uboot";
+					fdt = "fdt-SEQ";
+				};
+			};
+		};
+	};
+};
+#else
+	u-boot-sunxi-with-spl {
+		filename = "u-boot-sunxi-with-spl.bin";
+		pad-byte = <0xff>;
+
+		blob {
+			filename = "spl/sunxi-spl.bin";
+			min-size = <CONFIG_SPL_PAD_TO>;
+		};
+
+		u-boot-img {
+		};
+	};
+};
+#endif

@@ -67,7 +67,13 @@ static int sunxi_clk_disable(struct clk *clk)
 struct clk_ops sunxi_clk_ops = {
 	.enable = sunxi_clk_enable,
 	.disable = sunxi_clk_disable,
+	.set_rate = sunxi_clk_set_rate,
 };
+
+__weak ulong sunxi_clk_set_rate(struct clk *clk, ulong rate)
+{
+	return -ENOSYS;
+}
 
 static int sunxi_clk_bind(struct udevice *dev)
 {
@@ -201,6 +207,10 @@ static const struct udevice_id sunxi_clk_ids[] = {
 #ifdef CONFIG_CLK_SUN20I_D1
 	{ .compatible = "allwinner,sun20i-d1-ccu",
 	  .data = (ulong)&d1_ccu_desc },
+#endif
+#ifdef CONFIG_CLK_SUN300I_V821
+	{ .compatible = "allwinner,sun300i-v821-app-ccu",
+	  .data = (ulong)&v821_ccu_desc },
 #endif
 #ifdef CONFIG_CLK_SUN50I_H6
 	{ .compatible = "allwinner,sun50i-h6-ccu",

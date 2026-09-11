@@ -1,0 +1,68 @@
+if TARGET_AVAOTA_F1
+
+config SYS_BOARD
+	default "avaota_f1"
+
+config SYS_VENDOR
+	default "allwinner"
+
+config SYS_SOC
+	default "sunxi"
+
+config SYS_CPU
+	default "andes"
+
+config SYS_CONFIG_NAME
+	default "avaota_f1"
+
+config TEXT_BASE
+	default 0x82000000
+
+config SYS_LOAD_ADDR
+	default 0x81000000
+
+config HAS_CUSTOM_SYS_INIT_SP_ADDR
+	default y
+
+config CUSTOM_SYS_INIT_SP_ADDR
+	default 0x83000000
+
+config SPL_TEXT_BASE
+	default 0x02000468
+
+config SPL_STACK
+	default 0x02021c00
+
+config SPL_MAX_SIZE
+	default 0x11b98
+
+config SPL_BSS_START_ADDR
+	default 0x02012000
+
+config SPL_BSS_MAX_SIZE
+	default 0x10000
+
+config BOARD_SPECIFIC_OPTIONS
+	def_bool y
+	select SOC_SUNXI
+	select MACH_SUN300I_V821
+	select BINMAN if SPL
+	select RISCV_ANDES
+	select DM_GPIO
+	select SUNXI_GPIO
+	select SUNXI_NEW_PINCTRL
+	select SUPPORT_SPL
+	select SPL_IMAGE_TYPE_SUNXI_EGON
+	select MMC_SUNXI_HAS_NEW_MODE
+	select CLK_SUN300I_V821
+	select PINCTRL_SUN300I_V821
+	select SPL_DM_GPIO
+	select SPL_GPIO
+
+config SPL_IMAGE
+	default "spl/sunxi-spl.bin"
+
+endif
+
+config MACH_SUN300I_V821
+	bool

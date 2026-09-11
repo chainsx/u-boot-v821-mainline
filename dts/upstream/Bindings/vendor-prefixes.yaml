@@ -209,6 +209,8 @@ patternProperties:
     description: Avago Technologies
   "^avia,.*":
     description: avia semiconductor
+  "^avaotasbc,.*":
+    description: AvaotaSBC
   "^avic,.*":
     description: Shanghai AVIC Optoelectronics Co., Ltd.
   "^avnet,.*":

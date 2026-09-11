@@ -625,6 +625,34 @@ static const struct sunxi_pinctrl_desc __maybe_unused sun20i_d1_pinctrl_desc = {
 	.num_banks	= 7,
 };
 
+static const struct sunxi_pinctrl_function sun300i_v821_pinctrl_functions[] = {
+	{ "gpio_in",	0 },
+	{ "gpio_out",	1 },
+	{ "mmc0",	2 },	/* PC0-PC5 */
+	{ "spif",	2 },	/* PC6-PC11 */
+};
+
+static const struct sunxi_pinctrl_desc __maybe_unused sun300i_v821_pinctrl_desc = {
+	.functions	= sun300i_v821_pinctrl_functions,
+	.num_functions	= ARRAY_SIZE(sun300i_v821_pinctrl_functions),
+	.first_bank	= SUNXI_GPIO_A,
+	.num_banks	= 4,
+};
+
+static const struct sunxi_pinctrl_function sun300i_v821_r_pinctrl_functions[] = {
+	{ "gpio_in",	0 },
+	{ "gpio_out",	1 },
+	{ "uart0",	3 },	/* PL4-PL5 */
+	{ "uart3",	3 },	/* PL2-PL3 */
+};
+
+static const struct sunxi_pinctrl_desc __maybe_unused sun300i_v821_r_pinctrl_desc = {
+	.functions	= sun300i_v821_r_pinctrl_functions,
+	.num_functions	= ARRAY_SIZE(sun300i_v821_r_pinctrl_functions),
+	.first_bank	= SUNXI_GPIO_L,
+	.num_banks	= 1,
+};
+
 static const struct sunxi_pinctrl_function sun50i_a64_pinctrl_functions[] = {
 	{ "emac",	4 },	/* PD8-PD23 */
 	{ "gpio_in",	0 },
@@ -967,6 +995,16 @@ static const struct udevice_id sunxi_pinctrl_ids[] = {
 	{
 		.compatible = "allwinner,sun20i-d1-pinctrl",
 		.data = (ulong)&sun20i_d1_pinctrl_desc,
+	},
+#endif
+#ifdef CONFIG_PINCTRL_SUN300I_V821
+	{
+		.compatible = "allwinner,sun300i-v821-pinctrl",
+		.data = (ulong)&sun300i_v821_pinctrl_desc,
+	},
+	{
+		.compatible = "allwinner,sun300i-v821-r-pinctrl",
+		.data = (ulong)&sun300i_v821_r_pinctrl_desc,
 	},
 #endif
 #ifdef CONFIG_PINCTRL_SUN50I_A64

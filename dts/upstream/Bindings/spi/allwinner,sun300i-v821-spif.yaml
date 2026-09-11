@@ -1,0 +1,64 @@
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/spi/allwinner,sun300i-v821-spif.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: Allwinner V821 Dedicated SPI Flash Controller
+
+maintainers:
+  - ChainsX <chainsx@outlook.com>
+
+allOf:
+  - $ref: spi-controller.yaml#
+
+properties:
+  compatible:
+    const: allwinner,sun300i-v821-spif
+
+  reg:
+    maxItems: 1
+
+  interrupts:
+    maxItems: 1
+
+  clocks:
+    items:
+      - description: AHB Bus Clock
+      - description: Module Clock
+
+  clock-names:
+    items:
+      - const: ahb
+      - const: mod
+
+  resets:
+    maxItems: 1
+
+required:
+  - compatible
+  - reg
+  - interrupts
+  - clocks
+  - clock-names
+  - resets
+
+unevaluatedProperties: false
+
+examples:
+  - |
+    spi@44f00000 {
+        compatible = "allwinner,sun300i-v821-spif";
+        reg = <0 0x44f00000 0 0x1000>;
+        interrupts = <0 19 4>;
+        clocks = <&ccu 11>, <&ccu 3>;
+        clock-names = "ahb", "mod";
+        resets = <&ccu 7>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        flash@0 {
+            compatible = "jedec,spi-nor";
+            reg = <0>;
+        };
+    };

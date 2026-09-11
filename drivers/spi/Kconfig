@@ -563,6 +563,13 @@ config SPI_SUNXI
 
 	  Same controller driver can reuse in all Allwinner SoC variants.
 
+config SPI_SUNXI_SPIF
+	bool "Allwinner V821 SPIF controller support"
+	depends on SOC_SUNXI && MACH_SUN300I_V821
+	help
+	  Enable support for the dedicated SPI flash controller found on the
+	  Allwinner V821 SoC.
+
 config STM32_OSPI
 	bool "STM32MP2 OSPI driver"
 	depends on (STM32MP23X || STM32MP25X) && STM32_OMM

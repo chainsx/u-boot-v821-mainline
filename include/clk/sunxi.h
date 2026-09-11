@@ -9,6 +9,8 @@
 
 #include <linux/bitops.h>
 
+struct clk;
+
 /**
  * enum ccu_flags - ccu clock/reset flags
  *
@@ -86,5 +88,7 @@ struct ccu_plat {
 };
 
 extern struct clk_ops sunxi_clk_ops;
+ulong sunxi_clk_set_rate(struct clk *clk, ulong rate);
+extern const struct ccu_desc v821_ccu_desc;
 
 #endif /* _CLK_SUNXI_H */

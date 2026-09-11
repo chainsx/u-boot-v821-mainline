@@ -40,7 +40,16 @@ secondary_harts_relocation_error:
 .globl _start
 _start:
 #if CONFIG_IS_ENABLED(RISCV_MMODE)
+#ifdef CONFIG_MACH_SUN300I_V821
+	/* The A27 needs the vendor ISA-extension window before C code. */
+	csrw	MODE_PREFIX(ie), zero
+	li	t1, 0x1 << 22
+	csrs	0x7c4, t1
+	fence.i
+	li	a0, 0
+#else
 	csrr	a0, CSR_MHARTID
+#endif
 #endif
 
 	/*
@@ -144,7 +153,7 @@ call_board_init_f_0:
 call_harts_early_init:
 	jal	harts_early_init
 
-#if !CONFIG_IS_ENABLED(XIP)
+#if !CONFIG_IS_ENABLED(XIP) && CONFIG_IS_ENABLED(SMP)
 	/*
 	 * Pick hart to initialize global data and run U-Boot. The other harts
 	 * wait for initialization to complete.
@@ -155,12 +164,12 @@ call_harts_early_init:
 	bnez	s2, wait_for_gd_init
 #else
 	/*
-	 * FIXME: gp is set before it is initialized. If an XIP U-Boot ever
-	 * encounters a pending IPI on boot it is liable to jump to whatever
-	 * memory happens to be in ipi_data.addr on boot. It may also run into
-	 * problems if it encounters an exception too early (because printf/puts
-	 * accesses gd).
+	 * A single-hart image has no lottery to run, and an XIP image cannot
+	 * mutate lock variables in flash. Park any unexpected non-boot hart.
+	 * Keep the lottery result zero so the common path below takes the boot
+	 * hart branch.
 	 */
+	li	s2, 0
 	mv	gp, s0
 #if CONFIG_IS_ENABLED(RISCV_MMODE)
 	bnez	tp, secondary_hart_loop

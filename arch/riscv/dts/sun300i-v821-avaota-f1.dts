@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+/dts-v1/;
+
+#include "sun300i-v821.dtsi"
+
+/ {
+	model = "AvaotaSBC Avaota F1";
+	compatible = "avaotasbc,avaota-f1", "allwinner,sun300i-v821";
+
+	aliases {
+		mmc0 = &mmc0;
+		serial0 = &uart0;
+		spi0 = &spif;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0 0x80000000 0 0x4000000>;
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&mmc0 {
+	status = "okay";
+};
+
+&spif {
+	status = "okay";
+};

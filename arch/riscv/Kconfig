@@ -61,6 +61,12 @@ config TARGET_TH1520_LPI4A
 config TARGET_XILINX_MBV
 	bool "Support AMD/Xilinx MicroBlaze V"
 
+config TARGET_AVAOTA_F1
+	bool "Support Avaota F1 (Allwinner V821)"
+	help
+	  Enable support for the AvaotaSBC Avaota F1 board. This board uses
+	  the Allwinner V821 RV32 SoC and boots from SPI NOR or SD card.
+
 config TARGET_ASPEED_AST2700_IBEX
 	bool "Support Ibex RISC-V cores on Aspeed AST2700 SoC"
 
@@ -123,6 +129,7 @@ source "board/spacemit/bananapi-f3/Kconfig"
 source "board/starfive/visionfive2/Kconfig"
 source "board/thead/th1520_lpi4a/Kconfig"
 source "board/xilinx/mbv/Kconfig"
+source "board/allwinner/avaota_f1/Kconfig"
 
 # platform-specific options below
 source "arch/riscv/cpu/andes/Kconfig"

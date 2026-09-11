@@ -61,6 +61,7 @@ static bool sunxi_mmc_can_calibrate(void)
 	       IS_ENABLED(CONFIG_MACH_SUN50I_H5) ||
 	       IS_ENABLED(CONFIG_SUN50I_GEN_H6) ||
 	       IS_ENABLED(CONFIG_SUNXI_GEN_NCAT2) ||
+	       IS_ENABLED(CONFIG_MACH_SUN300I_V821) ||
 	       IS_ENABLED(CONFIG_MACH_SUN8I_R40);
 }
 
@@ -69,6 +70,35 @@ static int mmc_set_mod_clk(struct sunxi_mmc_priv *priv, unsigned int hz)
 	unsigned int pll, pll_hz, div, n, oclk_dly, sclk_dly;
 	bool new_mode = IS_ENABLED(CONFIG_MMC_SUNXI_HAS_NEW_MODE);
 	u32 val = 0;
+
+	if (IS_ENABLED(CONFIG_MACH_SUN300I_V821)) {
+		unsigned int m;
+
+		if (hz <= 24000000) {
+			pll = 0;
+			pll_hz = 40000000;
+		} else {
+			pll = BIT(24);
+			pll_hz = 192000000;
+		}
+
+		div = DIV_ROUND_UP(pll_hz, hz);
+		for (n = 1; n <= 32; n++) {
+			if (div % n)
+				continue;
+			m = div / n;
+			if (m <= 32)
+				goto found_v821_div;
+		}
+
+		printf("mmc %u cannot set clock to %u\n", priv->mmc_no, hz);
+		return -EINVAL;
+
+found_v821_div:
+		writel(BIT(31) | pll | ((n - 1) << 16) | (m - 1),
+		       priv->mclkreg);
+		return 0;
+	}
 
 	/* A83T support new mode only on eMMC */
 	if (IS_ENABLED(CONFIG_MACH_SUN8I_A83T) && priv->mmc_no != 2)
@@ -219,7 +249,8 @@ static int mmc_config_clock(struct sunxi_mmc_priv *priv, struct mmc *mmc)
 	rval &= ~SUNXI_MMC_CLK_DIVIDER_MASK;
 	writel(rval, &priv->reg->clkcr);
 
-#if defined(CONFIG_SUNXI_GEN_SUN6I) || defined(CONFIG_SUN50I_GEN_H6) || defined(CONFIG_SUNXI_GEN_NCAT2)
+#if defined(CONFIG_SUNXI_GEN_SUN6I) || defined(CONFIG_SUN50I_GEN_H6) || \
+	defined(CONFIG_SUNXI_GEN_NCAT2) || defined(CONFIG_MACH_SUN300I_V821)
 	/* A64 supports calibration of delays on MMC controller and we
 	 * have to set delay of zero before starting calibration.
 	 * Allwinner BSP driver sets a delay only in the case of
@@ -663,6 +694,9 @@ static const struct dm_mmc_ops sunxi_mmc_ops = {
 
 static unsigned get_mclk_offset(void)
 {
+	if (IS_ENABLED(CONFIG_MACH_SUN300I_V821))
+		return 0x14;
+
 	if (IS_ENABLED(CONFIG_MACH_SUN9I_A80))
 		return 0x410;
 
@@ -696,7 +730,6 @@ static int sunxi_mmc_probe(struct udevice *dev)
 	ret = mmc_of_parse(dev, cfg);
 	if (ret)
 		return ret;
-
 	priv->reg = dev_read_addr_ptr(dev);
 
 	/* We don't have a sunxi clock driver so find the clock address here */
@@ -720,7 +753,6 @@ static int sunxi_mmc_probe(struct udevice *dev)
 	ret = mmc_set_mod_clk(priv, 24000000);
 	if (ret)
 		return ret;
-
 	/* This GPIO is optional */
 	gpio_request_by_name(dev, "cd-gpios", 0, &priv->cd_gpio,
 			     GPIOD_IS_IN | GPIOD_PULL_UP);
@@ -746,6 +778,7 @@ static const struct udevice_id sunxi_mmc_ids[] = {
 	{ .compatible = "allwinner,sun8i-a83t-emmc" },
 	{ .compatible = "allwinner,sun9i-a80-mmc" },
 	{ .compatible = "allwinner,sun20i-d1-mmc" },
+	{ .compatible = "allwinner,sun300i-v821-mmc" },
 	{ .compatible = "allwinner,sun50i-a64-mmc" },
 	{ .compatible = "allwinner,sun50i-a64-emmc" },
 	{ .compatible = "allwinner,sun50i-h6-mmc" },

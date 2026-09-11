@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 
-if ARCH_SUNXI
+if SOC_SUNXI
 
 config PINCTRL_SUNXI
 	select PINCTRL_FULL
@@ -138,6 +138,14 @@ config PINCTRL_SUN20I_D1
 	bool "Support for the Allwinner D1/R528 PIO"
 	default MACH_SUN8I_R528
 	select PINCTRL_SUNXI
+
+config PINCTRL_SUN300I_V821
+	bool "Support for the Allwinner V821 PIO"
+	default MACH_SUN300I_V821
+	select PINCTRL_SUNXI
+	help
+	  Enable support for the main pin controller and the RTC pin
+	  controller found on the Allwinner V821 SoC.
 
 config PINCTRL_SUN55I_A523
 	bool "Support for the Allwinner A523 PIO"

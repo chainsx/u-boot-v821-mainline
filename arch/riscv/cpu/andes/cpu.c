@@ -26,7 +26,7 @@ int cleanup_before_linux(void)
 	return 0;
 }
 
-void harts_early_init(void)
+__weak void harts_early_init(void)
 {
 	/* Enable I/D-cache in SPL */
 	if (CONFIG_IS_ENABLED(RISCV_MMODE)) {

@@ -408,6 +408,7 @@ config SPL_HAVE_INIT_STACK
 	default y if MACH_SUN50I || MACH_SUN50I_H5
 	default y if MACH_SUN9I
 	default y if ARCH_SUNXI
+	default y if SOC_SUNXI
 	default y if ARCH_SC5XX && (SC59X_64 || SC59X)
 	default y if ARCH_SC5XX && SC58X
 	default y if ARCH_SC5XX && SC57X
@@ -537,7 +538,7 @@ config SPL_DISPLAY_PRINT
 config SPL_SYS_MMCSD_RAW_MODE
 	bool "Use raw reads to locate the next boot phase"
 	depends on SPL_DM_MMC || SPL_MMC
-	default y if ARCH_SUNXI || ARCH_DAVINCI || ARCH_UNIPHIER || \
+	default y if ARCH_SUNXI || SOC_SUNXI || ARCH_DAVINCI || ARCH_UNIPHIER || \
 		     ARCH_MX6 || ARCH_MX7 || \
 		     ARCH_ROCKCHIP || ARCH_MVEBU || ARCH_SOCFPGA_GEN5 || \
 		     ARCH_AT91 || ARCH_ZYNQ || ARCH_KEYSTONE || OMAP34XX || \
@@ -579,7 +580,7 @@ endchoice
 config SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR
 	hex "Address on the MMC to load U-Boot from"
 	depends on SYS_MMCSD_RAW_MODE_U_BOOT_USE_SECTOR
-	default 0x40 if ARCH_SUNXI
+	default 0x40 if ARCH_SUNXI || SOC_SUNXI
 	default 0x75 if ARCH_DAVINCI
 	default 0x8a if ARCH_MX6 || ARCH_MX7
 	default 0x100 if ARCH_UNIPHIER
@@ -596,7 +597,7 @@ config SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR
 config SYS_MMCSD_RAW_MODE_U_BOOT_DATA_PART_OFFSET
 	hex "U-Boot main hardware partition image offset"
 	depends on SYS_MMCSD_RAW_MODE_U_BOOT_USE_SECTOR
-	default 0x10 if ARCH_SUNXI
+	default 0x10 if ARCH_SUNXI || SOC_SUNXI
 	default 0x0
 	help
 	  On some platforms SPL location depends on hardware partition. The ROM
@@ -1758,6 +1759,10 @@ config SPL_AT91_MCK_BYPASS
 	  If this option is disabled, the SoC expects a crystal oscillator
 	  that needs driving on both XIN and XOUT lines.
 endmenu
+
+if SOC_SUNXI
+source "common/spl/Kconfig.sunxi"
+endif
 
 config TPL
 	depends on SUPPORT_TPL && !COMPILE_TEST

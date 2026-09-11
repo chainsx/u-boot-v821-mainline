@@ -1,0 +1,9 @@
+/* SPDX-License-Identifier: GPL-2.0+ */
+#ifndef __CONFIG_AVAOTA_F1_H
+#define __CONFIG_AVAOTA_F1_H
+
+#define RISCV_MMODE_TIMERBASE		0x48400000
+#define RISCV_MMODE_TIMER_FREQ		40000000
+#define RISCV_SMODE_TIMER_FREQ		40000000
+
+#endif

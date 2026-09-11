@@ -232,8 +232,8 @@ hostprogs-always-$(CONFIG_MX23) += mxsboot
 hostprogs-always-$(CONFIG_MX28) += mxsboot
 HOSTCFLAGS_mxsboot.o := -pedantic
 
-hostprogs-always-$(CONFIG_ARCH_SUNXI) += mksunxiboot
-hostprogs-always-$(CONFIG_ARCH_SUNXI) += sunxi-spl-image-builder
+hostprogs-always-$(CONFIG_SOC_SUNXI) += mksunxiboot
+hostprogs-always-$(CONFIG_SOC_SUNXI) += sunxi-spl-image-builder
 sunxi-spl-image-builder-objs := sunxi-spl-image-builder.o generated/lib/bch.o
 
 hostprogs-always-$(CONFIG_NETCONSOLE) += ncb
