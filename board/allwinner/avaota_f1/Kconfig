@@ -42,10 +42,10 @@ config SPL_OPENSBI_FDT_ADDR
 	default 0x80700000
 
 config SPL_BSS_START_ADDR
-	default 0x02012000
+	default 0x02014000
 
 config SPL_BSS_MAX_SIZE
-	default 0x10000
+	default 0xd000
 
 config BOARD_SPECIFIC_OPTIONS
 	def_bool y

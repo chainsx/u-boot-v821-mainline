@@ -50,6 +50,7 @@ static struct v821_dram_para avaota_f1_dram = {
 	.tpr = {
 		0x471992, 0x131a10c, 0x57041, 0xb4787896, 0,
 		0x48484848, 0x48, 0x1621121e,
+		0, 0, 0, 0, 0, 0x34000100,
 	},
 };
 

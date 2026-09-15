@@ -41,12 +41,70 @@ secondary_harts_relocation_error:
 _start:
 #if CONFIG_IS_ENABLED(RISCV_MMODE)
 #ifdef CONFIG_MACH_SUN300I_V821
+/*
+ * The V821 boot ROM enters SRAM on its E907 management CPU. The E907 CPU
+ * must program the A27 entry mailbox and release the A27 before it can park
+ * in WFI. Keep this trampoline position-independent and exactly 0xa0 bytes
+ * long: its second instruction passes trampoline + 0xa0 to the A27.
+ */
+	/* a27_start = . + 0xa0 */
+	.word	0x00000597
+	.word	0x0a058593
+	/* Disable M-mode interrupts and assert the A27 power-on reset. */
+	.word	0x46214601
+	.word	0x30063073
+	.word	0x42001737
+	.word	0x08070793
+	.word	0x05374f94
+	.word	0xe6931800
+	.word	0xcf940046
+	.word	0x8ec94bd4
+	.word	0x5f7ccbd4
+	.word	0x0c07e793
+	.word	0x07b7df7c
+	/* Publish the A27 entry address and release the A27 reset. */
+	.word	0xa2234910
+	.word	0x173720b7
+	.word	0x537c4a01
+	.word	0x1007e793
+	.word	0x07b7d37c
+	.word	0x07374a01
+	.word	0xa4238000
+	.word	0x660558e7
+	.word	0x03f60613
+	.word	0x7c163073
+	.word	0x49100737
+	.word	0x5807a223
+	/* Wait until the A27 acknowledges the entry mailbox. */
+	.word	0x20472783
+	.word	0x1737c785
+	.word	0x27834200
+	.word	0x06b70947
+	.word	0x8fd50400
+	.word	0x08f72a23
+	.word	0x47b14781
+	.word	0x7e17a6f3
+	.word	0xa7f34791
+	.word	0x00737e17
+	.word	0xa0011050
+	.word	0xbfc90001
+	.word	0x00000000
+	.word	0x00000000
+	.word	0x00000000
+
+	.if . - _start != 0xa0
+	.error "V821 E907 trampoline must be exactly 0xa0 bytes"
+	.endif
+
+.globl a27_start
+a27_start:
 	/* The A27 needs the vendor ISA-extension window before C code. */
 	csrw	MODE_PREFIX(ie), zero
 	li	t1, 0x1 << 22
 	csrs	0x7c4, t1
 	fence.i
 	li	a0, 0
+	li	a1, 0
 #else
 	csrr	a0, CSR_MHARTID
 #endif
