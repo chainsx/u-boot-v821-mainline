@@ -6,8 +6,6 @@
 #include <asm/arch-sunxi/bootrom.h>
 #include <linux/kernel.h>
 
-#define V821_SPL_MMC_SECTOR	16
-
 u32 spl_boot_device(void)
 {
 	struct boot_file_head *header = (void *)V821_SPL_ADDR;
@@ -27,5 +25,6 @@ unsigned long board_spl_mmc_get_uboot_raw_sector(struct mmc *mmc,
 
 	sector = max(sector, (ulong)(CONFIG_SPL_PAD_TO / 512));
 
-	return V821_SPL_MMC_SECTOR + max(sector, 0x20UL);
+	/* The MMC framework adds the LBA-16 SPL start offset itself. */
+	return max(sector, 0x20UL);
 }
