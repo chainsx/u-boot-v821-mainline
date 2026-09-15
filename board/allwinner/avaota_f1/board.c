@@ -37,6 +37,9 @@ void harts_early_init(void)
 {
 	ulong val;
 
+	if (!CONFIG_IS_ENABLED(RISCV_MMODE))
+		return;
+
 	/* Required before executing the vendor xandes DRAM code. */
 	csr_set(V821_CSR_MXSTATUS, V821_MXSTATUS_ISAEE);
 

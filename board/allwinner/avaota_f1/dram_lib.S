@@ -1,8 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0+ */
 	.file	"mctl_hal.c"
 	.option nopic
-	.option verbatim
-	.option cmodel_medany
+	/* Andes custom opcodes are emitted as words for upstream GNU binutils. */
 	.text
 	.section	.text.handler_super_standby,"ax",@progbits
 	.align	1
@@ -95,9 +94,9 @@ eye_delay_compensation:
 	call	t0,__riscv_save_2
 	lw	a5,88(a0)
 	lw	a4,84(a0)
-	bfoz	a3,a5,1,4
+	.word	0x0447a6db
 	mv	s1,a0
-	bfoz	a0,a4,9,12
+	.word	0x24c7255b
 	or	a0,a0,a3
 	li	a2,1125134336
 	li	a3,1125134336
@@ -115,7 +114,7 @@ eye_delay_compensation:
 	slli	a2,a4,5
 	and	a2,a2,a1
 	srli	a1,a5,4
-	bfoz	a1,a1,1,4
+	.word	0x0445a5db
 	li	s0,1125134336
 	or	a2,a2,a1
 	addi	a3,a3,912
@@ -140,7 +139,7 @@ eye_delay_compensation:
 	addi	a6,a6,-512
 	lw	a7,820(s0)
 	and	t1,t1,a6
-	bfoz	a2,a2,1,4
+	.word	0x0446265b
 	or	a2,a2,t1
 	or	a7,a2,a7
 	sw	a7,820(s0)
@@ -152,18 +151,18 @@ eye_delay_compensation:
 	sw	a2,824(s0)
 	and	a6,a7,a6
 	lw	a2,0(a3)
-	bfoz	a5,a5,1,4
+	.word	0x0447a7db
 	or	a5,a5,a6
 	or	a2,a5,a2
 	sw	a2,0(a3)
 	addi	a3,s0,952
 	lw	a2,0(a3)
-	bfoz	a1,a1,25,28
+	.word	0x65c5a5db
 	or	a5,a5,a2
 	sw	a5,0(a3)
 	addi	a5,s0,828
 	lw	a3,0(a5)
-	bfoz	a4,a4,25,28
+	.word	0x65c7275b
 	or	a1,a1,a3
 	sw	a1,0(a5)
 	addi	a5,s0,956
@@ -375,26 +374,26 @@ auto_set_timing_para:
 	lw	s1,0(a0)
 	lw	s4,4(a0)
 	mv	s2,a0
-	bbc	a2,1,.L32
+	.word	0x22167a5b
 	lw	s7,40(a0)
 	lw	s11,44(a0)
-	bfoz	a2,s7,23,21
+	.word	0x5d5ba65b
 	lw	s0,48(a0)
 	sw	a2,60(sp)
-	bfoz	a2,s11,27,23
+	.word	0x6d7da65b
 	sw	a2,12(sp)
-	bfoz	a2,s11,19,15
-	bfoz	s8,s7,20,15
-	bfoz	s5,s7,14,11
-	bfoz	s3,s7,10,6
-	bfoz	s10,s11,22,20
-	bfoz	a6,s11,14,11
-	bfoz	s6,s11,10,6
+	.word	0x4cfda65b
+	.word	0x50fbac5b
+	.word	0x38bbaadb
+	.word	0x286ba9db
+	.word	0x594dad5b
+	.word	0x38bda85b
+	.word	0x286dab5b
 	sw	a2,48(sp)
 	andi	s7,s7,63
-	bfoz	a2,s0,20,12
+	.word	0x50c4265b
 	andi	s11,s11,63
-	bfoz	s0,s0,11,0
+	.word	0x2c04245b
 	sw	a2,16(sp)
 	.align	1
 .L33:
@@ -403,10 +402,10 @@ auto_set_timing_para:
 	sw	a2,52(sp)
 	lw	a2,28(s2)
 	sw	a2,44(sp)
-	beqc	s4,6,.L61
+	.word	0x006a645b, 0x7840006f
 	bgtu	s4,a5,.L62
-	beqc	s4,2,.L63
-	beqc	s4,3,.L64
+	.word	0x002a645b, 0x6560006f
+	.word	0x003a645b, 0x6d20006f
 	.align	1
 .L89:
 	li	a2,8
@@ -501,7 +500,7 @@ auto_set_timing_para:
 	lw	a1,40(sp)
 	slli	t2,t0,16
 	or	t4,a2,t4
-	bfoz	t5,t5,5,4
+	.word	0x144f2f5b
 	lw	a2,60(sp)
 	sw	t5,44(a3)
 	or	s7,t2,s7
@@ -573,7 +572,7 @@ auto_set_timing_para:
 	.align	1
 .L32:
 	srli	s9,s1,1
-	bnec	s4,3,.L34
+	.word	0x183a655b
 	mv	a1,s9
 	li	a0,8
 	call	auto_cal_timing
@@ -659,9 +658,9 @@ auto_set_timing_para:
 	sw	a5,44(s2)
 	lw	a5,56(s2)
 	li	a4,1
-	bfoz	a5,a5,15,12
-	beqc	a5,1,.L56
-	beqc	a5,2,.L57
+	.word	0x3cc7a7db
+	.word	0x2e17d75b
+	.word	0x2e27dd5b
 	.align	1
 .L58:
 	lw	a2,16(sp)
@@ -715,7 +714,7 @@ auto_set_timing_para:
 	j	.L86
 	.align	1
 .L34:
-	bnec	s4,2,.L43
+	.word	0x0a2a605b
 	mv	a1,s9
 	li	a0,50
 	call	auto_cal_timing
@@ -762,7 +761,7 @@ auto_set_timing_para:
 	j	.L39
 	.align	1
 .L43:
-	bnec	s4,6,.L44
+	.word	0x0c6a6b5b
 	mv	a1,s9
 	li	a0,50
 	call	auto_cal_timing
@@ -841,7 +840,7 @@ auto_set_timing_para:
 	j	.L86
 	.align	1
 .L44:
-	bnec	s4,7,.L77
+	.word	0x0c7a685b
 	mv	a1,s9
 	li	a0,50
 	call	auto_cal_timing
@@ -946,7 +945,7 @@ auto_set_timing_para:
 	j	.L60
 	.align	1
 .L62:
-	bnec	s4,7,.L89
+	.word	0x007a545b, 0xa2dff06f
 	li	a5,60
 	divu	a1,s1,a5
 	li	a5,800
@@ -1081,8 +1080,8 @@ auto_set_timing_para:
 	add	a2,a2,a5
 	sw	a2,40(sp)
 	lw	a2,56(sp)
-	bfoz	a4,a2,3,2
-	beqc	a4,1,.L83
+	.word	0x0c26275b
+	.word	0x0a17555b
 	li	a4,912
 	bleu	s1,a4,.L83
 	lw	t0,44(sp)
@@ -1185,11 +1184,11 @@ ccm_get_hosc_freq:
 .L92:
 	addi	a5,a3,1032
 	lw	a4,0(a5)
-	bbc	a4,1,.L92
+	.word	0xbe177d5b
 	lw	a5,0(a5)
 	li	a4,-57344
 	addi	a4,a4,-1857
-	bfoz	a5,a5,23,4
+	.word	0x5c47a7db
 	add	a5,a5,a4
 	li	a4,40960
 	addi	a4,a4,-162
@@ -1218,7 +1217,7 @@ ccm_get_sscg:
 	beq	a5,a1,.L104
 	call	t0,__riscv_save_2
 	lw	a5,0(a2)
-	bbc	a5,1,.L99
+	.word	0x0017f75b
 	lw	a5,0(a3)
 	li	a0,524288
 	or	a5,a5,a0
@@ -1252,7 +1251,7 @@ ccm_get_sscg:
 	or	a5,a5,a4
 	sw	a5,0(s1)
 	lw	a0,0(s0)
-	bfoz	a0,a0,16,0
+	.word	0x4005255b
 	tail	__riscv_restore_2
 	.align	1
 .L104:
@@ -1269,7 +1268,7 @@ ccm_set_pll_sscg:
 	li	a4,-1572864
 	addi	a6,a4,-1
 	lw	a4,0(a2)
-	bfoz	a5,a5,2,1
+	.word	0x0817a7db
 	addi	sp,sp,-16
 	and	a4,a4,a6
 	bne	a5,zero,.L110
@@ -1280,12 +1279,12 @@ ccm_set_pll_sscg:
 .L111:
 	lw	a5,92(a0)
 	li	a4,4
-	bfoz	a5,a5,22,20
+	.word	0x5947a7db
 	addi	a5,a5,-1
 	bgtu	a5,a4,.L113
 	lui	a4,%hi(.L115)
 	addi	a4,a4,%lo(.L115)
-	lea.w	a5,a4,a5
+	.word	0x0cf707db
 	lw	a5,0(a5)
 	jr	a5
 	.section	.rodata
@@ -1300,7 +1299,7 @@ ccm_set_pll_sscg:
 	.section	.text.ccm_set_pll_sscg
 	.align	1
 .L110:
-	bnec	a5,1,.L112
+	.word	0x0017e75b
 	li	a6,524288
 	or	a4,a4,a6
 	j	.L122
@@ -1357,7 +1356,7 @@ ccm_set_pll_sscg:
 ccm_set_pll_ddr_clk:
 	call	t0,__riscv_save_4
 	lw	a5,92(a1)
-	bfoz	a5,a5,6,6
+	.word	0x1867a7db
 	bne	a5,a0,.L125
 	lw	s0,0(a1)
 	.align	1
@@ -1403,7 +1402,7 @@ ccm_set_pll_ddr_clk:
 .L128:
 	lw	a5,128(a4)
 	addi	s2,a4,128
-	bbc	a5,28,.L128
+	.word	0xbfc7fc5b
 	li	a0,20
 	call	__usdelay
 	mul	a0,s0,s3
@@ -1457,7 +1456,7 @@ mctl_sys_init:
 	sw	a5,128(s0)
 	lw	a5,4(s0)
 	li	a0,10
-	bfoz	a5,a5,30,0
+	.word	0x7807a7db
 	sw	a5,4(s0)
 	lw	a4,4(s0)
 	addi	s3,s0,148
@@ -1529,7 +1528,7 @@ mctl_com_init:
 	andi	a6,a2,1
 	and	a1,a5,a1
 	seqz	a4,a6
-	bfoz	a5,a3,16,18
+	.word	0x4126a7db
 	or	a5,a5,a1
 	slli	a4,a4,12
 	or	a4,a5,a4
@@ -1544,9 +1543,9 @@ mctl_com_init:
 	sw	a5,0(a4)
 	srli	t3,a2,12
 	li	a7,1
-	bbc	a2,8,.L140
+	.word	0x0086775b
 	andi	a5,t3,15
-	bnec	a5,1,.L140
+	.word	0x0017e35b
 	li	a7,2
 	.align	1
 .L140:
@@ -1567,23 +1566,23 @@ mctl_com_init:
 	addi	a5,a3,12
 	and	a4,a4,t5
 	srl	a5,t4,a5
-	bfoz	a5,a5,0,2
+	.word	0x0027a7db
 	or	a4,a4,t3
 	or	a4,a5,a4
 	addi	a5,a3,4
 	srl	a5,t4,a5
 	addi	a5,a5,-1
-	bfoz	a5,a5,4,7
+	.word	0x1077a7db
 	or	a5,a5,a4
 	srl	a4,t4,a3
 	andi	a4,a4,15
 	or	a2,a5,t0
-	beqc	a4,4,.L146
+	.word	0x02475c5b
 	bgtu	a4,t6,.L142
 	ori	a2,a5,1792
-	beqc	a4,1,.L146
+	.word	0x0217565b
 	or	a2,a5,a1
-	beqc	a4,2,.L146
+	.word	0x0227525b
 	.align	1
 .L145:
 	ori	a2,a5,1536
@@ -1600,7 +1599,7 @@ mctl_com_init:
 	.align	1
 .L142:
 	or	a2,a5,t2
-	bnec	a4,8,.L145
+	.word	0xbe87625b
 	.align	1
 .L146:
 	sw	a2,0(t1)
@@ -1610,7 +1609,7 @@ mctl_com_init:
 	li	a5,1125130240
 	lw	a5,0(a5)
 	li	a4,771
-	bbs	a5,0,.L148
+	.word	0x4007f45b
 	li	a4,513
 	.align	1
 .L148:
@@ -1626,7 +1625,7 @@ mctl_com_init:
 	beq	a5,zero,.L136
 	li	a4,1125130240
 	lw	a2,0(a4)
-	bfoz	a3,a5,25,26
+	.word	0x65a7a6db
 	or	a3,a3,a2
 	sw	a3,0(a4)
 	slli	a5,a5,10
@@ -1669,14 +1668,14 @@ mctl_phy_ac_remapping:
 	call	memcpy
 	lw	a5,92(s0)
 	li	a2,22
-	bbs	a5,18,.L166
+	.word	0x5127f55b
 	addi	a1,sp,32
 	.align	1
 .L170:
 	addi	a0,sp,8
 	call	memcpy_self
 	lw	a5,4(s0)
-	bnec	a5,3,.L165
+	.word	0x0e37e75b
 	lbu	a5,8(sp)
 	lbu	a4,9(sp)
 	slli	a5,a5,5
@@ -1803,9 +1802,9 @@ mctl_channel_init:
 	lw	a4,0(a4)
 	not	a5,a5
 	andi	a4,a4,-49
-	bfoz	a5,a5,0,5
+	.word	0x0057a7db
 	li	a3,672
-	bfoz	s1,s1,3,2
+	.word	0x0c24a4db
 	or	a4,a4,a5
 	bgtu	a2,a3,.L172
 	li	a3,-61440
@@ -1837,8 +1836,8 @@ mctl_channel_init:
 	sw	a5,0(a4)
 	addi	s3,s0,264
 	call	eye_delay_compensation
-	beqc	s1,1,.L176
-	beqc	s1,2,.L177
+	.word	0x0414d45b
+	.word	0x2224d85b
 	lw	a5,0(s3)
 	li	a0,10
 	andi	a5,a5,-65
@@ -1882,7 +1881,7 @@ mctl_channel_init:
 	li	a5,1125134336
 	addi	a5,a5,284
 	lw	a4,0(a5)
-	bnec	s1,1,.L181
+	.word	0x1e14ed5b
 	li	a3,-134217728
 	addi	a3,a3,-193
 	and	a4,a4,a3
@@ -1896,7 +1895,7 @@ mctl_channel_init:
 	lw	a4,20(s2)
 	li	a5,1125134336
 	addi	a5,a5,192
-	bbc	a4,12,.L182
+	.word	0x1ec7735b
 	lw	a4,0(a5)
 	li	a3,-268435456
 	and	a4,a4,a3
@@ -1909,7 +1908,7 @@ mctl_channel_init:
 	li	a5,1241513984
 	lw	a5,448(a5)
 	andi	a5,a5,15
-	bnec	a5,1,.L184
+	.word	0x0017ee5b
 	li	a5,1241518080
 	addi	a5,a5,-1992
 	lw	a4,0(a5)
@@ -1925,12 +1924,12 @@ mctl_channel_init:
 	li	a3,-67108864
 	and	a3,a5,a3
 	lw	a5,8(s2)
-	bfoz	a5,a5,23,0
+	.word	0x5c07a7db
 	or	a5,a5,a3
 	li	a3,33554432
 	or	a5,a5,a3
 	sw	a5,0(a2)
-	bnec	s1,1,.L185
+	.word	0x1814ed5b
 	li	a5,82
 	sw	a5,0(a4)
 	li	a5,83
@@ -1938,12 +1937,12 @@ mctl_channel_init:
 	.align	1
 .L186:
 	lw	a5,16(a4)
-	bbc	a5,0,.L186
+	.word	0xbe07ff5b
 	li	a0,10
 	call	__usdelay
 	lw	a4,4(s2)
 	li	a5,1312
-	bnec	a4,3,.L187
+	.word	0x0037645b
 	li	a5,1440
 	.align	1
 .L187:
@@ -1958,11 +1957,11 @@ mctl_channel_init:
 .L188:
 	lw	a5,16(s0)
 	andi	s2,a5,1
-	bbc	a5,0,.L188
+	.word	0xbe07fd5b
 	li	a5,1241513984
 	lw	a5,448(a5)
 	andi	a5,a5,15
-	bnec	a5,1,.L189
+	.word	0x0a17e65b
 	addi	a3,s0,268
 	lw	a5,0(a3)
 	li	a4,-100663296
@@ -1981,7 +1980,7 @@ mctl_channel_init:
 .L190:
 	lw	a5,24(s0)
 	andi	a5,a5,7
-	bnec	a5,3,.L190
+	.word	0xbe37ee5b
 	li	a5,1241518080
 	addi	a5,a5,-1992
 	lw	a4,0(a5)
@@ -1997,10 +1996,10 @@ mctl_channel_init:
 .L191:
 	lw	a5,24(s0)
 	andi	a5,a5,7
-	bnec	a5,1,.L191
+	.word	0xbe17ee5b
 	li	a0,15
 	call	__usdelay
-	bnec	s1,1,.L189
+	.word	0x0414e05b
 	addi	a4,s0,264
 	lw	a5,0(a4)
 	addi	a3,s0,268
@@ -2021,12 +2020,12 @@ mctl_channel_init:
 	.align	1
 .L192:
 	lw	a5,16(a4)
-	bbc	a5,0,.L192
+	.word	0xbe07ff5b
 	.align	1
 .L189:
 	li	a5,1125134336
 	lw	a5,16(a5)
-	bfoz	a4,a5,27,20
+	.word	0x6d47a75b
 	beq	a4,zero,.L193
 	li	s2,1048576
 	and	s2,a5,s2
@@ -2048,7 +2047,7 @@ mctl_channel_init:
 	sw	a5,0(s3)
 	lw	a5,96(s0)
 	lw	a4,0(a3)
-	bfoz	a5,a5,20,16
+	.word	0x5107a7db
 	andi	a4,a4,-264
 	addi	a5,a5,-2
 	or	a5,a5,a4
@@ -2057,7 +2056,7 @@ mctl_channel_init:
 	sw	a5,0(a3)
 	lw	a5,0(s0)
 	li	a4,134217728
-	bfoz	a5,a5,30,0
+	.word	0x7807a7db
 	or	a5,a5,a4
 	j	.L217
 	.align	1
@@ -2081,10 +2080,10 @@ mctl_channel_init:
 	lw	a4,448(a5)
 	li	a5,98
 	andi	a4,a4,15
-	beqc	a4,1,.L187
+	.word	0xa817545b
 	lw	a4,4(s2)
 	li	a5,370
-	bnec	a4,3,.L187
+	.word	0xa6376e5b
 	li	a5,498
 	j	.L187
 	.align	1
@@ -2093,7 +2092,7 @@ mctl_channel_init:
 	.align	1
 .L195:
 	lw	a5,24(s0)
-	bbc	a5,0,.L195
+	.word	0xbe07ff5b
 	lw	a4,140(s0)
 	li	s4,-2147483648
 	or	a4,a4,s4
@@ -2102,7 +2101,7 @@ mctl_channel_init:
 	call	__usdelay
 	lw	a4,140(s0)
 	li	a0,10
-	bfoz	a4,a4,30,0
+	.word	0x7807275b
 	sw	a4,140(s0)
 	call	__usdelay
 	li	a4,1125130240
@@ -2118,7 +2117,7 @@ mctl_channel_init:
 	and	a5,a5,a4
 	sw	a5,0(a3)
 	addi	s3,s0,140
-	bnec	s1,1,.L171
+	.word	0xb014e95b
 	addi	s0,s0,284
 	lw	a5,0(s0)
 	andi	a5,a5,-193
@@ -2133,11 +2132,11 @@ mctl_channel_init:
 DRAMC_get_dram_size:
 	li	a4,1125130240
 	lw	a5,0(a4)
-	bfoz	a3,a5,7,4
-	bfoz	a0,a5,11,8
+	.word	0x1c47a6db
+	.word	0x2c87a55b
 	add	a0,a0,a3
 	addi	a0,a0,-14
-	bfoz	a3,a5,3,2
+	.word	0x0c27a6db
 	add	a0,a0,a3
 	andi	a5,a5,3
 	li	a3,1
@@ -2147,11 +2146,11 @@ DRAMC_get_dram_size:
 	mv	a5,a0
 	andi	a2,a4,3
 	beq	a2,zero,.L221
-	bfoz	a5,a4,11,8
-	bfoz	a2,a4,7,4
+	.word	0x2c8727db
+	.word	0x1c47265b
 	add	a5,a5,a2
 	addi	a5,a5,-14
-	bfoz	a4,a4,3,2
+	.word	0x0c27275b
 	add	a5,a5,a4
 	sll	a5,a3,a5
 	.align	1
@@ -2186,19 +2185,19 @@ dqs_gate_detect:
 	call	t0,__riscv_save_1
 	li	a5,1125134336
 	lw	a4,16(a5)
-	bbc	a4,22,.L228
+	.word	0x03677a5b
 	addi	a4,a5,840
 	lw	a1,0(a4)
 	addi	a5,a5,968
 	lw	s0,0(a5)
-	bfoz	a1,a1,25,24
-	bfoz	s0,s0,25,24
-	bnec	a1,2,.L237
+	.word	0x6585a5db
+	.word	0x6584245b
+	.word	0x0425e85b
 	lw	a5,20(a0)
 	li	a4,-61440
 	addi	a4,a4,-16
 	and	a5,a5,a4
-	bnec	s0,2,.L232
+	.word	0x02246a5b
 	sw	a5,20(a0)
 	lui	a0,%hi(.LC9)
 	addi	a0,a0,%lo(.LC9)
@@ -2354,7 +2353,7 @@ dramc_simple_wr_test:
 	.type	mctl_vrefzq_init, @function
 mctl_vrefzq_init:
 	lw	a2,92(a0)
-	bbs	a2,17,.L250
+	.word	0x43167b5b
 	li	a5,1125134336
 	addi	a1,a5,272
 	lw	a4,0(a1)
@@ -2364,7 +2363,7 @@ mctl_vrefzq_init:
 	lw	a3,60(a0)
 	or	a4,a4,a3
 	sw	a4,0(a1)
-	bbs	a2,16,.L250
+	.word	0x41067c5b
 	addi	a5,a5,276
 	lw	a4,0(a5)
 	andi	a3,a4,-128
@@ -2439,8 +2438,8 @@ auto_scan_dram_size:
 .L257:
 	lw	a5,20(s10)
 	li	s0,1
-	bfoz	a5,a5,15,12
-	bnec	a5,1,.L259
+	.word	0x3cc7a7db
+	.word	0x0017e35b
 	li	s0,2
 	.align	1
 .L259:
@@ -2460,16 +2459,16 @@ auto_scan_dram_size:
 	.align	1
 .L263:
 	mv	a1,a5
-	bbs	a2,0,.L262
+	.word	0x4006745b
 	not	a1,a5
 	.align	1
 .L262:
 	sw	a1,0(a5)
 	addi	a2,a2,1
 	addi	a5,a5,4
-	bnec	a2,64,.L263
+	.word	0xfe06685b
 	li	s8,1125130240
-	lea.w	s8,s8,s9
+	.word	0x0d9c0c5b
 	lw	a5,0(s8)
 	li	a3,-4096
 	addi	a3,a3,243
@@ -2493,16 +2492,16 @@ auto_scan_dram_size:
 	.align	1
 .L267:
 	not	a7,a0
-	bbs	a5,0,.L265
+	.word	0x4007f35b
 	mv	a7,a0
 	.align	1
 .L265:
-	lea.w	t3,a1,a5
+	.word	0x0cf58e5b
 	lw	t3,0(t3)
 	bne	t3,a7,.L266
 	addi	a5,a5,1
 	addi	a0,a0,-4
-	bnec	a5,64,.L267
+	.word	0xfe07e35b
 	.align	1
 .L288:
 	li	a5,16
@@ -2525,7 +2524,7 @@ auto_scan_dram_size:
 	sll	a2,a2,a1
 	or	a2,a5,a2
 	sw	a2,16(s10)
-	bnec	s9,1,.L269
+	.word	0x001cec5b
 	li	a4,1125130240
 	lw	a5,0(a4)
 	li	s5,-2139095040
@@ -2549,7 +2548,7 @@ auto_scan_dram_size:
 	.align	1
 .L274:
 	not	a0,a1
-	bbs	a2,0,.L272
+	.word	0x4006735b
 	mv	a0,a1
 	.align	1
 .L272:
@@ -2558,7 +2557,7 @@ auto_scan_dram_size:
 	addi	a2,a2,1
 	addi	a1,a1,-4
 	addi	a5,a5,4
-	bnec	a2,64,.L274
+	.word	0xfe06645b
 	li	a7,0
 	.align	1
 .L273:
@@ -2579,7 +2578,7 @@ auto_scan_dram_size:
 	sll	a7,a7,a2
 	or	a5,a5,a7
 	sw	a5,16(s10)
-	bnec	s9,1,.L275
+	.word	0x001cec5b
 	li	a4,1125130240
 	lw	a5,0(a4)
 	li	s5,-2080374784
@@ -2607,19 +2606,19 @@ auto_scan_dram_size:
 	.align	1
 .L279:
 	not	a7,a1
-	bbs	a2,0,.L277
+	.word	0x4006735b
 	mv	a7,a1
 	.align	1
 .L277:
-	lea.w	t3,a0,a2
+	.word	0x0cc50e5b
 	lw	t3,0(t3)
 	bne	t3,a7,.L278
 	addi	a2,a2,1
 	addi	a1,a1,-4
-	bnec	a2,64,.L279
-	beqc	a5,13,.L285
+	.word	0xfe06635b
+	.word	0x00d7d55b
 	li	s8,0
-	beqc	a5,9,.L281
+	.word	0x0097d65b
 	.align	1
 .L285:
 	addi	a5,a5,-10
@@ -2642,13 +2641,13 @@ auto_scan_dram_size:
 	sw	a2,16(s10)
 	bne	s0,s9,.L282
 	li	s1,1
-	bnec	s0,2,.L256
+	.word	0x9e24645b
 	lw	a5,20(s10)
 	li	a4,-4096
 	addi	a4,a4,255
 	and	a5,a5,a4
 	srli	a4,a2,16
-	bfoz	a2,a2,15,0
+	.word	0x3c06265b
 	bne	a4,a2,.L283
 	lui	a0,%hi(.LC21)
 	addi	a0,a0,%lo(.LC21)
@@ -2656,7 +2655,7 @@ auto_scan_dram_size:
 	j	.L310
 	.align	1
 .L282:
-	bnec	s9,1,.L261
+	.word	0x021ce45b
 	li	a4,1125130240
 	lw	a5,0(a4)
 	li	s1,-2013265920
@@ -2686,13 +2685,13 @@ auto_scan_dram_size:
 	.align	1
 .L278:
 	addi	a5,a5,1
-	bnec	a5,14,.L284
+	.word	0xb2e7e35b
 	li	a5,13
 	j	.L285
 	.align	1
 .L266:
 	addi	a2,a2,1
-	bnec	a2,17,.L287
+	.word	0x9f16655b
 	j	.L288
 	.size	auto_scan_dram_size, .-auto_scan_dram_size
 	.section	.text.auto_scan_dram_rank_width,"ax",@progbits
@@ -2718,7 +2717,7 @@ auto_scan_dram_rank_width:
 	call	mctl_core_init
 	li	a5,1125134336
 	lw	a5,16(a5)
-	bbc	a5,20,.L312
+	.word	0x0147f75b
 	.align	1
 .L314:
 	li	a0,0
@@ -2750,7 +2749,7 @@ auto_scan_dram_config:
 	call	t0,__riscv_save_2
 	lw	a5,92(a0)
 	mv	s1,a0
-	bbs	a5,14,.L320
+	.word	0x42e7f55b
 	call	auto_scan_dram_rank_width
 	mv	s0,a0
 	bne	a0,zero,.L320
@@ -2766,7 +2765,7 @@ auto_scan_dram_config:
 	.align	1
 .L320:
 	lw	a5,92(s1)
-	bbs	a5,0,.L322
+	.word	0x4007fe5b
 	mv	a0,s1
 	call	auto_scan_dram_size
 	mv	s0,a0
@@ -2778,7 +2777,7 @@ auto_scan_dram_config:
 .L322:
 	lw	a5,92(s1)
 	li	s0,1
-	bbs	a5,15,.L319
+	.word	0xfcf7fa5b
 	li	a4,24576
 	addi	a4,a4,1
 	or	a5,a5,a4
@@ -2852,9 +2851,9 @@ init_DRAM:
 	li	a5,1241513984
 	lw	a5,64(a5)
 	mv	s0,a1
-	bnec	a5,2,.L327
+	.word	0x1227e25b
 	lw	a5,92(a1)
-	bbs	a5,16,.L328
+	.word	0x4f07f55b
 	li	a5,1241518080
 	addi	a4,a5,-1992
 	sw	zero,0(a4)
@@ -2893,7 +2892,7 @@ init_DRAM:
 	.align	1
 .L329:
 	lw	a5,92(s0)
-	bbc	a5,0,.L330
+	.word	0x0a07f35b
 	.align	1
 .L333:
 	lui	a1,%hi(.LC30)
@@ -2910,7 +2909,7 @@ init_DRAM:
 	addi	a0,a0,%lo(.LC33)
 	call	printf
 	lw	a5,12(s0)
-	bbs	a5,0,.L331
+	.word	0x4607fd5b
 	lui	a0,%hi(.LC35)
 	addi	a0,a0,%lo(.LC35)
 	call	printf
@@ -2985,9 +2984,9 @@ init_DRAM:
 .L338:
 	lw	a5,56(s0)
 	li	a4,1
-	bfoz	a5,a5,15,12
-	beqc	a5,1,.L339
-	beqc	a5,2,.L340
+	.word	0x3cc7a7db
+	.word	0x0217d55b
+	.word	0x1227da5b
 	lw	a5,4(s0)
 	addi	a5,a5,-2
 	bleu	a5,a4,.L360
@@ -3010,7 +3009,7 @@ init_DRAM:
 .L342:
 	lw	s1,20(s0)
 	bge	s1,zero,.L344
-	bfoz	s1,s1,30,16
+	.word	0x7904a4db
 	.align	1
 .L345:
 	lui	a0,%hi(.LC42)
@@ -3020,7 +3019,7 @@ init_DRAM:
 	lw	a3,92(s0)
 	li	a5,1125134336
 	addi	a4,a5,160
-	bbc	a3,30,.L346
+	.word	0x11e6f25b
 	lw	a5,0(a4)
 	lw	a5,72(s0)
 	bne	a5,zero,.L347
@@ -3050,8 +3049,8 @@ init_DRAM:
 	addi	a2,a2,-1
 	lw	a1,4(s0)
 	and	a4,a4,a2
-	bbs	a3,9,.L349
-	bnec	a1,6,.L350
+	.word	0x4096f45b
+	.word	0x0065e45b
 	.align	1
 .L349:
 	li	a2,20480
@@ -3065,7 +3064,7 @@ init_DRAM:
 	li	a0,-2147483648
 	or	a4,a4,a0
 	sw	a4,0(a2)
-	bbc	a3,8,.L352
+	.word	0x0086f85b
 	addi	a5,a5,184
 	lw	a4,0(a5)
 	ori	a4,a4,768
@@ -3075,14 +3074,14 @@ init_DRAM:
 	li	a5,1125134336
 	addi	a5,a5,264
 	lw	a4,0(a5)
-	bbc	a3,26,.L353
+	.word	0x09a6f45b
 	li	a2,-8192
 	addi	a2,a2,-1
 	and	a4,a4,a2
 	.align	1
 .L373:
 	sw	a4,0(a5)
-	bnec	a1,7,.L355
+	.word	0x0075ec5b
 	li	a2,1125134336
 	lw	a5,124(a2)
 	li	a4,-983040
@@ -3093,14 +3092,14 @@ init_DRAM:
 	sw	a5,124(a2)
 	.align	1
 .L355:
-	bbs	a3,27,.L356
+	.word	0x41b6f75b
 	mv	a0,s0
 	call	set_master_priority_pad
 	.align	1
 .L356:
 	call	dram_enable_all_master
 	lw	a5,92(s0)
-	bbs	a5,28,.L357
+	.word	0x45c7f95b
 	.align	1
 .L358:
 	call	handler_super_standby
@@ -3145,7 +3144,7 @@ init_DRAM:
 	li	a5,1241513984
 	lw	a5,448(a5)
 	andi	a5,a5,15
-	beqc	a5,1,.L358
+	.word	0xba17d45b
 	li	a1,4096
 	mv	a0,s1
 	call	dramc_simple_wr_test

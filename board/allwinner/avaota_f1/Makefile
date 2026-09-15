@@ -7,4 +7,5 @@ obj-$(CONFIG_XPL_BUILD) += spl.o
 obj-$(CONFIG_XPL_BUILD) += dram_init.o dram_lib.o
 
 # The DRAM routine imported from the Allwinner BSP uses Andes custom opcodes.
-AFLAGS_dram_lib.o := -march=rv32imafdc_xandes -mabi=ilp32d -mcmodel=medany
+# It runs on the A27 after the E907 trampoline has released that CPU.
+AFLAGS_dram_lib.o := -march=rv32imafdc -mabi=ilp32d -mcmodel=medany

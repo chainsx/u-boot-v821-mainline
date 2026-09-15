@@ -28,13 +28,18 @@ config CUSTOM_SYS_INIT_SP_ADDR
 	default 0x83000000
 
 config SPL_TEXT_BASE
-	default 0x02000468
+	default 0x02000060
 
 config SPL_STACK
 	default 0x02021c00
 
 config SPL_MAX_SIZE
-	default 0x11b98
+	default 0x11fa0
+
+config SPL_OPENSBI_FDT_ADDR
+	hex "OpenSBI device tree load address"
+	depends on SPL_OPENSBI
+	default 0x80700000
 
 config SPL_BSS_START_ADDR
 	default 0x02012000
@@ -46,6 +51,7 @@ config BOARD_SPECIFIC_OPTIONS
 	def_bool y
 	select SOC_SUNXI
 	select MACH_SUN300I_V821
+	select OF_HAS_PRIOR_STAGE if RISCV_SMODE
 	select BINMAN if SPL
 	select RISCV_ANDES
 	select DM_GPIO
