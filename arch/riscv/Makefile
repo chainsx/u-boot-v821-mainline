@@ -62,6 +62,12 @@ CFLAGS_EFI		+= $(ARCH_FLAGS)
 
 head-y := arch/riscv/cpu/start.o
 
+ifdef CONFIG_MACH_SUN300I_V821
+# The imported V821 DRAM code contains Andes custom branches encoded as raw
+# words. Link-time relaxation changes the offsets encoded in those words.
+LDFLAGS_u-boot-spl += --no-relax
+endif
+
 libs-y += arch/riscv/cpu/
 libs-y += arch/riscv/cpu/$(CPU)/
 libs-y += arch/riscv/lib/
